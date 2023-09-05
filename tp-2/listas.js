@@ -1,4 +1,4 @@
-var listaNumeros = [2,4,6,-1,5,-4,0];
+var listaNumerosEjemplo = [2,4,6,-1,5,-4,0];
 /**
  * Recibe
  * - `listaDeNumeros`: una lista (array) de números.
