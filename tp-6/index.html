@@ -1,1 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pokédex</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+            .pokemonImage {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+            body {
+            height: 100vh;
+            background-color: #c9582b;
+        }
+            h1{
+            background-color:#ffeb3b;
+            border-radius: 25px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <center><br><br>
+        <h1>Lista De Pokemones</h1>
+        <br><br></center>
+        <div id="pokemonList" class="row"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch('https://pokeapi.co/api/v2/pokemon?limit=151')
+                .then(response => response.json())
+                .then(data => {
+                    const pokemonList = document.getElementById('pokemonList');
+
+                    data.results.forEach(pokemon => {
+                        const pokemonItem = document.createElement('div');
+                        pokemonItem.classList.add('col-3', 'mb-3');
+
+                        const pokemonName = document.createElement('h4');
+                        pokemonName.textContent = pokemon.name.toUpperCase();
+
+                        const pokemonImage = document.createElement('img');
+                        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+                            .then(response => response.json())
+                            .then(pokemonData => {
+                                pokemonImage.src = pokemonData.sprites.front_default;
+                                pokemonImage.alt = pokemon.name;
+
+                                const detailsButton = document.createElement('button');
+                                detailsButton.style.backgroundColor = '#ffeb3b';
+                                detailsButton.textContent = 'Ver';
+                                detailsButton.classList.add('btn', 'btn-info', 'btn-sm', 'mt-2');
+
+                                detailsButton.addEventListener('click', () => {
+                                    fetch(pokemon.url)
+                                        .then(response => response.json())
+                                        .then(pokemonData => {
+                                            alert(`Nombre: ${pokemonData.name}\nPeso: ${pokemonData.weight}\nAltura: ${pokemonData.height}`);
+                                            // Aquí podrías mostrar los datos en un modal o en un área específica en la página.
+                                        });
+                                });
+
+                                pokemonItem.appendChild(pokemonName);
+                                pokemonItem.appendChild(pokemonImage);
+                                pokemonItem.appendChild(detailsButton);
+                                pokemonList.appendChild(pokemonItem);
+                            })
+                            .catch(error => console.log('Error fetching image data:', error));
+                    });
+                })
+                .catch(error => console.log('Error fetching data:', error));
+        });
+    </script>
+</body>
+</html>
 
